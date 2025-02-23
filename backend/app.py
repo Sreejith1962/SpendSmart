@@ -110,7 +110,17 @@ def login():
     
     return jsonify({'message': 'Invalid credentials'}), 401
 
-
+@app.route('/leaderboard', methods=['GET'])
+def leaderboard():
+    users = User.query.order_by(User.experience_points.desc()).all()
+    
+    leaderboard_data = [{
+        'rank': index + 1,
+        'username': user.username,
+        'experience_points': user.experience_points
+    } for index, user in enumerate(users)]
+    
+    return jsonify({'leaderboard': leaderboard_data}), 200
 
 @app.route('/profile', methods=['GET'])
 def profile():
@@ -151,6 +161,17 @@ def fetch_goals():
     } for goal in user_goals]
 
     return jsonify({'goals': goals_list}), 200
+@app.route('/update_experience', methods=['POST'])
+def update_experience():
+    data = request.json
+    user = User.query.filter_by(user_id=data['user_id']).first()
+    
+    if user:
+        user.experience_points += data['points']
+        db.session.commit()
+        return jsonify({'message': 'Experience points updated successfully'}), 200
+    
+    return jsonify({'message': 'User not found'}), 404
 @app.route('/add_goal', methods=['POST'])
 def add_goal():
     data = request.json
@@ -278,6 +299,9 @@ def calculate():
     
     weights = optimize_portfolio(stock_data,riskFreeRate)
     trading_days = 252  
+    if stock_data.empty:
+     print("error No stock data available")  # Handle gracefully
+
     returns = ((1 + stock_data.pct_change(fill_method=None)).prod() ** (trading_days / len(stock_data))) -1
     returns = returns[::-1]
 

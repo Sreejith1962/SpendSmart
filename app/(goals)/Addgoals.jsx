@@ -88,7 +88,7 @@ const GoalSetting = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
-        <ScrollView>
+      
       <StatusBar style={colorScheme === "dark" ? "dark" : "light"} />
       <View style={styles.inputContainer}>
         <TextInput
@@ -141,7 +141,6 @@ const GoalSetting = () => {
         )}
         
       />
-       </ScrollView>
       <Link href='./calculator' asChild>
           <Pressable style={styles.button}>
             <Text style={styles.buttonText}>Calculate</Text>

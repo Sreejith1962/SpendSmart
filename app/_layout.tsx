@@ -6,8 +6,9 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <Stack screenOptions={{headerShown:true}}>
         <Stack.Screen name="index"/>
-        <Stack.Screen name= "authentication"/>
-        <Stack.Screen name="goals"/>
+        <Stack.Screen name= "(authentication)"/>
+        <Stack.Screen name="(goals)"/>
+        <Stack.Screen name="(leaderboard)"/>
       </Stack>
     </SafeAreaProvider>
   );

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Picker } from '@react-native-picker/picker';
+import Navbar from '../Navbar';
 
 
 
@@ -210,6 +211,7 @@ const App =  () => {
 
      </View>
   </ScrollView>
+  <Navbar/>
 </SafeAreaView>
 
   );
@@ -219,7 +221,7 @@ export default App;
 const styles=StyleSheet.create({
 
     container: {
-      padding: 10,
+      padding: 0,
       backgroundColor: 'rgb(23, 9, 19)', 
       color: "#E8E8E8", 
       flex: 1,
@@ -245,10 +247,9 @@ const styles=StyleSheet.create({
       width: 115,
       borderRadius: 200,
       borderCurve: 'circular',
-      borderWidth: 1,shadowOpacity:0.1,shadowOffset: { width: 0, height: 4 },
-      shadowRadius: 6,
-      elevation: 5,
-      shadowColor:'white'
+      borderWidth: 1,
+      
+      
   },
 box2:{
         height:150,

@@ -1,0 +1,57 @@
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Link } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+export default function Navbar() {
+  return (
+    <View style={styles.main}>
+      <View style={styles.box}>
+        <TouchableOpacity>
+          <Link href="/">
+            <MaterialCommunityIcons name="home" size={30} color="blue" />
+          </Link>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.box}>
+        <TouchableOpacity>
+          <Link href="/(goals)/Addgoals">
+            <MaterialCommunityIcons name="bullseye-arrow" size={30} color="blue" />
+          </Link>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.box}>
+        <TouchableOpacity>
+          <Link href="/(goals)/Addgoals">
+            <MaterialCommunityIcons name="finance" size={30} color="blue" />
+          </Link>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.box}>
+      <TouchableOpacity>
+          <Link href="/(leaderboard)/Leaderboard">
+            <MaterialCommunityIcons name="medal" size={30} color="blue" />
+          </Link>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  main: {
+    flexDirection: "row",
+    height: 62,
+    width: "100%",
+    backgroundColor: "black",
+  },
+  box: {
+    paddingLeft: 19,
+    backgroundColor: "white",
+    width: "25%",
+    borderRadius: 2,
+    borderColor: "blue",
+    borderWidth: 0.1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
 
 const API_URL = "http://127.0.0.1:5000";
@@ -9,8 +9,7 @@ const App= ()=>{
       const [password, setPassword] = useState("");
       const [email, setEmail] = useState("");
       const [location,setLocation]=useState("India")
-      const [userId, setUserId] = useState(null);
-      const [profile, setProfile] = useState(null);
+      
     const registerUser = async () => {
         try {
           const response = await fetch(`${API_URL}/register`, {
@@ -67,7 +66,6 @@ const styles= StyleSheet.create({
   background:{
     backgroundColor:'black',
     flex: 1,
-    // justifyContent: "center",
     alignItems: "center",
     color:'white'
   },
@@ -96,11 +94,11 @@ const styles= StyleSheet.create({
     backgroundColor:'white',
     color:'black',
     width:'85%',
-    height:25,
+    height:43,
     fontSize:20,
-    borderRadius:20,
-    margin:5,
-    padding:20,
+    borderRadius:17,
+    margin:8,
+    paddingLeft:4,
   },
   text:{
     fontSize:20,
