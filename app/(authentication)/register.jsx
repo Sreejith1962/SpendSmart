@@ -2,7 +2,7 @@
 import {  useState } from "react";
 import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://spendsmart-r11q.onrender.com";
 
 const App= ()=>{
     const [username, setUsername] = useState("");

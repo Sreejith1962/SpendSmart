@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { Link } from "expo-router";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://spendsmart-r11q.onrender.com";
 
 const GoalSetting = () => {
   const { colorScheme, theme } = useContext(ThemeContext);
@@ -56,7 +56,7 @@ const GoalSetting = () => {
   const addGoal = async (userId, goalName, yearOfCompletion, amount) => {
     
     try {
-        const response = await fetch('http://127.0.0.1:5000/add_goal', {
+        const response = await fetch('https://spendsmart-r11q.onrender.com/add_goal', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

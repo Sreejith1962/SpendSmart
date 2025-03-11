@@ -30,7 +30,7 @@ const App =  () => {
             return;
           }
   
-          const response = await fetch(`http://localhost:5000/fetch_goals?user_id=${userId}`);
+          const response = await fetch(`https://spendsmart-r11q.onrender.com/fetch_goals?user_id=${userId}`);
           const data = await response.json();
   
           if (response.ok) {
@@ -62,7 +62,7 @@ const App =  () => {
     };
 
     try {
-          const response = await axios.post('http://127.0.0.1:5000/calculate', payload);
+          const response = await axios.post('https://spendsmart-r11q.onrender.com/calculate', payload);
           setResults(response.data);
           await AsyncStorage.setItem('portfolio_results', JSON.stringify(response.data));
           

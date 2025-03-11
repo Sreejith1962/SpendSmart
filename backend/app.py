@@ -11,7 +11,7 @@ from scipy.optimize import minimize
 
 app = Flask(__name__)
 CORS(app)  
-CORS(app, origins=["http://localhost:8081"])
+CORS(app, origins="*")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///financial_literacy.db'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

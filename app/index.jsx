@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { SafeAreaView } from "react-native-safe-area-context";
 import Navbar from "./Navbar";
 
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://spendsmart-r11q.onrender.com";
 
 export default function Index() {
   const [username, setUsername] = useState("");
