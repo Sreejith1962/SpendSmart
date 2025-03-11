@@ -203,11 +203,7 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 14,
     borderRadius: 30,
-    shadowColor: '#1E90FF', 
-    shadowOpacity: 0.8,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 6,
-    elevation: 5,
+    boxShadow: "0px 2px 4px rgba(246, 238, 238, 0.2)"
   },buttonText: {
     fontSize: 18,
     fontWeight: 'bold',

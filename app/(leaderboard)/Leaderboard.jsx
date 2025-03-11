@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import Navbar from '../Navbar';
 
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
@@ -12,6 +13,9 @@ const Leaderboard = () => {
     }, []);
 
     return (
+        <SafeAreaView style={styles.container}>
+        <ScrollView>
+            
         <View style={styles.container}>
             <Text style={styles.heading}>Leaderboard</Text>
             <FlatList
@@ -25,7 +29,13 @@ const Leaderboard = () => {
                     </View>
                 )}
             />
+            
         </View>
+            
+        </ScrollView>
+        <Navbar/>
+        </SafeAreaView>
+        
     );
 };
 
@@ -33,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f4f4f4',
+        backgroundColor:'rgb(84, 170, 241)',
     },
     heading: {
         fontSize: 24,
