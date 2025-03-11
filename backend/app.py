@@ -107,8 +107,7 @@ def login():
             'salary': float(user.salary),
             'goals_list': goals_list
         }), 200
-     
-    print(user.password)
+    
     return jsonify({'message': 'Invalid credentials'}), 401
 
 @app.route('/leaderboard', methods=['GET'])
