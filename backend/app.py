@@ -11,7 +11,7 @@ from scipy.optimize import minimize
 
 app = Flask(__name__)
 CORS(app)  
-CORS(app, origins="*")
+CORS(app, origins=["http://localhost:8081"])
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///financial_literacy.db'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -107,7 +107,8 @@ def login():
             'salary': float(user.salary),
             'goals_list': goals_list
         }), 200
-    
+     
+    print(user.password)
     return jsonify({'message': 'Invalid credentials'}), 401
 
 @app.route('/leaderboard', methods=['GET'])
