@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Picker } from '@react-native-picker/picker';
 import Navbar from '../Navbar';
+import { API_URL } from '@/constants/api';
 
 
 
@@ -30,7 +31,7 @@ const App =  () => {
             return;
           }
   
-          const response = await fetch(`https://spendsmart-r11q.onrender.com/fetch_goals?user_id=${userId}`);
+          const response = await fetch(`${API_URL}/fetch_goals?user_id=${userId}`);
           const data = await response.json();
   
           if (response.ok) {
@@ -62,7 +63,7 @@ const App =  () => {
     };
 
     try {
-          const response = await axios.post('https://spendsmart-r11q.onrender.com/calculate', payload);
+          const response = await axios.post(`${API_URL}/calculate`, payload);
           setResults(response.data);
           await AsyncStorage.setItem('portfolio_results', JSON.stringify(response.data));
           

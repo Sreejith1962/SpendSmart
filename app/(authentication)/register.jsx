@@ -1,8 +1,9 @@
 
+import { API_URL } from "@/constants/api";
 import {  useState } from "react";
 import { Alert, Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
 
-const API_URL = "https://spendsmart-r11q.onrender.com";
+
 
 const App= ()=>{
     const [username, setUsername] = useState("");

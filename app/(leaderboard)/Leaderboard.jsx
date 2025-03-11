@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, SafeAreaView, ScrollView, KeyboardAvoidingView } from 'react-native';
 import Navbar from '../Navbar';
+import { API_URL } from '@/constants/api';
+
 
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
 
     useEffect(() => {
-        fetch('https://spendsmart-r11q.onrender.com/leaderboard')
+        fetch(`${API_URL}/leaderboard`)
             .then(response => response.json())
             .then(data => setLeaderboard(data.leaderboard))
             .catch(error => console.error('Error fetching leaderboard:', error));
@@ -14,7 +16,7 @@ const Leaderboard = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-        <ScrollView>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
             
         <View style={styles.container}>
             <Text style={styles.heading}>Leaderboard</Text>
@@ -28,11 +30,12 @@ const Leaderboard = () => {
                         <Text style={styles.points}>{item.experience_points} XP</Text>
                     </View>
                 )}
+                nestedScrollEnabled={true} 
             />
-            
+           
         </View>
             
-        </ScrollView>
+        </KeyboardAvoidingView>
         <Navbar/>
         </SafeAreaView>
         
@@ -42,7 +45,7 @@ const Leaderboard = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        
         backgroundColor:'rgb(84, 170, 241)',
     },
     heading: {
