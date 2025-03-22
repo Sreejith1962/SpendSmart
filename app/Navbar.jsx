@@ -21,7 +21,7 @@ export default function Navbar() {
       </View>
       <View style={styles.box}>
         <TouchableOpacity>
-          <Link replace href="/auth">
+          <Link replace href="/(city-selection)/city-selection">
             <MaterialCommunityIcons name="finance" size={30} color="blue" />
           </Link>
         </TouchableOpacity>

@@ -53,11 +53,25 @@ class Goal(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
 
 
-class LivingCost(db.Model):
-    location_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    location_name = db.Column(db.String(100), unique=True, nullable=False)
-    average_cost = db.Column(db.Numeric(10, 2), nullable=False)
-    last_updated = db.Column(db.DateTime, default=datetime.utcnow)
+class CityCost(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    city_name = db.Column(db.String(100), unique=True, nullable=False)
+    rent_min = db.Column(db.Numeric(10, 2), nullable=False)
+    rent_max = db.Column(db.Numeric(10, 2), nullable=False)
+    salary_min = db.Column(db.Numeric(10, 2), nullable=False)
+    salary_max = db.Column(db.Numeric(10, 2), nullable=False)
+    last_updated = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
+
+    def to_dict(self):
+        return {
+            "city_name": self.city_name,
+            "rent_min": float(self.rent_min),
+            "rent_max": float(self.rent_max),
+            "salary_min": float(self.salary_min),
+            "salary_max": float(self.salary_max),
+            "last_updated": self.last_updated.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
 
 
 class SalaryTransaction(db.Model):
@@ -71,6 +85,64 @@ class SalaryTransaction(db.Model):
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db.session.remove()  
+import requests
+from datetime import datetime, timedelta
+
+RAPID_API_KEY = "48a15926f9msh4d5dee488a67d77p1d2717jsn2e3367a9a578"
+RAPID_API_HOST = "cost-of-living-and-prices.p.rapidapi.com"
+
+def fetch_city_data(city_name):
+    """Fetch data from RapidAPI and update the database if needed."""
+    
+    city = CityCost.query.filter_by(city_name=city_name).first()
+    
+    # Check if update is required (older than 1 month)
+    if city and city.last_updated > datetime.utcnow() - timedelta(days=30):
+        print(f"Data for {city_name} is up-to-date.")
+        return
+
+    url = f"https://{RAPID_API_HOST}/prices"
+    params = {"city_name": city_name, "country_name": "India"}
+    headers = {
+        "x-rapidapi-key": RAPID_API_KEY,
+        "x-rapidapi-host": RAPID_API_HOST,
+    }
+
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        resdata = response.json()
+
+        rent_min = next((item["min"] for item in resdata["prices"] if item["item_name"] == "One bedroom apartment outside of city centre"), None)
+        rent_max = next((item["max"] for item in resdata["prices"] if item["item_name"] == "Three bedroom apartment in city centre"), None)
+        salary_min = next((item["min"] for item in resdata["prices"] if item["item_name"] == "Average Monthly Net Salary, After Tax"), None)
+        salary_max = next((item["max"] for item in resdata["prices"] if item["item_name"] == "Average Monthly Net Salary, After Tax"), None)
+
+        if rent_min is None or rent_max is None or salary_min is None or salary_max is None:
+            print(f"Error: Missing data for {city_name}")
+            return
+        
+        # Update or insert city data
+        if city:
+            city.rent_min = rent_min
+            city.rent_max = rent_max
+            city.salary_min = salary_min
+            city.salary_max = salary_max
+            city.last_updated = datetime.utcnow()
+        else:
+            city = CityCost(
+                city_name=city_name,
+                rent_min=rent_min,
+                rent_max=rent_max,
+                salary_min=salary_min,
+                salary_max=salary_max,
+            )
+            db.session.add(city)
+
+        db.session.commit()
+        print(f"Updated data for {city_name}")
+
+    except Exception as e:
+        print("Error fetching city data:", e)
 
 @app.route('/register', methods=['POST'])
 def register():
