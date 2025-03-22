@@ -8,6 +8,7 @@ import pandas as pd
 import yfinance as yf
 from pandas_datareader import data as pdr
 from scipy.optimize import minimize
+from datetime import datetime, timezone
 
 
 app = Flask(__name__)
@@ -54,7 +55,6 @@ class Goal(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
 
 
-from datetime import datetime, timezone
 
 class CityCost(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
