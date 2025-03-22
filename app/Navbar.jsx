@@ -7,28 +7,28 @@ export default function Navbar() {
     <View style={styles.main}>
       <View style={styles.box}>
         <TouchableOpacity>
-          <Link href="/">
+          <Link replace href="/">
             <MaterialCommunityIcons name="home" size={30} color="blue" />
           </Link>
         </TouchableOpacity>
       </View>
       <View style={styles.box}>
         <TouchableOpacity>
-          <Link href="/(goals)/Addgoals">
+          <Link replace href="/(goals)/Addgoals">
             <MaterialCommunityIcons name="bullseye-arrow" size={30} color="blue" />
           </Link>
         </TouchableOpacity>
       </View>
       <View style={styles.box}>
         <TouchableOpacity>
-          <Link href="/(goals)/Addgoals">
+          <Link replace href="/auth">
             <MaterialCommunityIcons name="finance" size={30} color="blue" />
           </Link>
         </TouchableOpacity>
       </View>
       <View style={styles.box}>
       <TouchableOpacity>
-          <Link href="/(leaderboard)/Leaderboard">
+          <Link replace href="/(leaderboard)/Leaderboard">
             <MaterialCommunityIcons name="medal" size={30} color="blue" />
           </Link>
         </TouchableOpacity>
@@ -45,13 +45,13 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   box: {
-    paddingLeft: 19,
-    backgroundColor: "white",
-    width: "25%",
-    borderRadius: 2,
-    borderColor: "blue",
-    borderWidth: 0.1,
+    flex: 1, 
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "white",
+    borderRadius: 2,
+    borderColor: "blue",
+    borderWidth: 0.5,
   },
+  
 });

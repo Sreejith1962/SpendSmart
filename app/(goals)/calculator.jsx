@@ -212,7 +212,7 @@ const App =  () => {
 
      </View>
   </ScrollView>
-  <Navbar/>
+
 </SafeAreaView>
 
   );

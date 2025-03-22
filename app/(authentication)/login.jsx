@@ -22,12 +22,11 @@ export default function Login() {
       });
   
       const data = await response.json();
-      console.log("Login API Response:", JSON.stringify(data, null, 2)); // ✅ Debug response
+      console.log("Login API Response:", JSON.stringify(data, null, 2)); 
   
       if (response.ok) {
         console.log("Login successful! Waiting for data stabilization...");
   
-        // Small delay (50ms) to ensure data is fully received
         await new Promise(resolve => setTimeout(resolve, 50));
   
         if (!data.user_id ) {
@@ -80,7 +79,7 @@ export default function Login() {
         <Text style={styles.buttonText}>{isLoading ? "Logging in..." : "Login"}</Text>
       </Pressable>
       <Text style={{color:'white',fontSize:19,paddingTop:14}}>Not a registered user? 
-        <Link href='/(authentication)/register' asChild>
+        <Link replace href='/(authentication)/register' asChild>
         <Pressable >
           <Text style={{color:'blue',fontSize:17,}}> Register Now</Text>
 

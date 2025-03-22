@@ -18,7 +18,7 @@ const Leaderboard = () => {
         <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
             
-        <View style={styles.container}>
+        <View >
             <Text style={styles.heading}>Leaderboard</Text>
             <FlatList
                 data={leaderboard}
@@ -36,7 +36,6 @@ const Leaderboard = () => {
         </View>
             
         </KeyboardAvoidingView>
-        <Navbar/>
         </SafeAreaView>
         
     );
@@ -45,7 +44,7 @@ const Leaderboard = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        
+        paddingTop:20,
         backgroundColor:'rgb(84, 170, 241)',
     },
     heading: {

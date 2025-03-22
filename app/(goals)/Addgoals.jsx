@@ -26,7 +26,6 @@ const GoalSetting = () => {
   const [goals, setGoals] = useState([]);
   const [userId, setUserId] = useState(null);
 
-  // Load user ID and fetch goals on mount
   useEffect(() => {
     const loadUserId = async () => {
       try {
@@ -169,7 +168,7 @@ const GoalSetting = () => {
 
 
       {/* Navigation Button */}
-      <Link href="./calculator" asChild>
+      <Link replace href="./calculator" asChild>
         <Pressable style={styles.button}>
           <Text style={styles.buttonText}>Calculate</Text>
         </Pressable>

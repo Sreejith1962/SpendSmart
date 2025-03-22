@@ -36,7 +36,7 @@ export default function Home() {
       <View>
        <Text style={styles.text}>Hello {profile.username} </Text>
        <View style={{flex:1,flexDirection:'row',justifyContent:'center'}}>
-       <Link href="/(goals)/Addgoals" asChild>
+       <Link replace href="/(goals)/Addgoals" asChild>
   <TouchableOpacity style={styles.items}>
     <Text>Goals</Text>
   </TouchableOpacity>
