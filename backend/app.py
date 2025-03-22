@@ -9,11 +9,16 @@ import yfinance as yf
 from pandas_datareader import data as pdr
 from scipy.optimize import minimize
 from datetime import datetime, timezone
+from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 CORS(app)  
 CORS(app, origins="*")
+
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db) 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///financial_literacy.db'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
