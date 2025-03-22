@@ -9,6 +9,7 @@ import yfinance as yf
 from pandas_datareader import data as pdr
 from scipy.optimize import minimize
 
+
 app = Flask(__name__)
 CORS(app)  
 CORS(app, origins="*")
@@ -26,7 +27,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     experience_points = db.Column(db.Integer, default=0)
     credit_score = db.Column(db.Integer, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     location = db.Column(db.String(100), nullable=False)
     salary = db.Column(db.Numeric(10, 2), default=0)
 
@@ -53,6 +54,8 @@ class Goal(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
 
 
+from datetime import datetime, timezone
+
 class CityCost(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     city_name = db.Column(db.String(100), unique=True, nullable=False)
@@ -60,7 +63,7 @@ class CityCost(db.Model):
     rent_max = db.Column(db.Numeric(10, 2), nullable=False)
     salary_min = db.Column(db.Numeric(10, 2), nullable=False)
     salary_max = db.Column(db.Numeric(10, 2), nullable=False)
-    last_updated = db.Column(db.DateTime, default=datetime.now(datetime.timezone.utc))
+    last_updated = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     def to_dict(self):
         return {
@@ -73,14 +76,13 @@ class CityCost(db.Model):
         }
 
 
-
 class SalaryTransaction(db.Model):
     transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     type = db.Column(db.Enum('Earning', 'Deduction'), nullable=False)
     description = db.Column(db.String(255))
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -96,8 +98,8 @@ def fetch_city_data(city_name):
     
     city = CityCost.query.filter_by(city_name=city_name).first()
     
-    # Check if update is required (older than 1 month)
-    if city and city.last_updated > datetime.utcnow() - timedelta(days=30):
+    
+    if city and city.last_updated > datetime.datetime.now(timezone.utc) - timedelta(days=30):
         print(f"Data for {city_name} is up-to-date.")
         return
 
@@ -121,13 +123,13 @@ def fetch_city_data(city_name):
             print(f"Error: Missing data for {city_name}")
             return
         
-        # Update or insert city data
+        
         if city:
             city.rent_min = rent_min
             city.rent_max = rent_max
             city.salary_min = salary_min
             city.salary_max = salary_max
-            city.last_updated = datetime.utcnow()
+            city.last_updated = datetime.now(timezone.utc)
         else:
             city = CityCost(
                 city_name=city_name,
@@ -143,6 +145,32 @@ def fetch_city_data(city_name):
 
     except Exception as e:
         print("Error fetching city data:", e)
+
+
+@app.route("/cities", methods=["GET"])
+def get_cities():
+    for city in ["Delhi", "Bangalore", "Kochi"]:
+        fetch_city_data(city)
+    cities = CityCost.query.all()
+    return jsonify([city.to_dict() for city in cities]), 200
+
+@app.route("/update-city", methods=["POST"])
+def update_city():
+    data = request.json
+    user_id = data.get("user_id")
+    city_name = data.get("city_name")
+
+    if not user_id or not city_name:
+        return jsonify({"error": "Missing user_id or city_name"}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    user.location = city_name
+    db.session.commit()
+
+    return jsonify({"message": "City updated successfully", "city": city_name}), 200
 
 @app.route('/register', methods=['POST'])
 def register():
