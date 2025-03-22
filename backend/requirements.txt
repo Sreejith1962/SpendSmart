@@ -8,4 +8,3 @@ yfinance
 pandas_datareader
 scipy
 gunicorn
-flask-migrate
