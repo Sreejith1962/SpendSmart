@@ -1,2 +1,1 @@
-export const API_URL = "https://spendsmart-b9lk.onrender.com";
-// export const API_URL = "https://spendsmart-r11q.onrender.com";
+export const API_URL = "https://spendsmart-backend-t32q.onrender.com";

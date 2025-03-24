@@ -79,7 +79,8 @@ def register():
     new_user = User(username=data['username'], password=hashed_password, email=data['email'], location=data['location'])
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
+    user = User.query.filter_by(username=data['username']).first()
+    return jsonify({'message': 'User registered successfully','user_id':user.user_id}), 201
 
 @app.route('/login', methods=['POST'])
 def login():

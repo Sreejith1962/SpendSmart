@@ -32,7 +32,11 @@ export default function CitySelection() {
   };
 
   return (
+    <View style={styles.background}>
+      <Text style={styles.header}>Hello Please Select your City</Text>
     <View style={styles.container}>
+      
+
       {cities.map(city => (
         <Pressable key={city.city_name} onPress={() => selectCity(city.city_name)} style={styles.cityBox}>
           <Text style={styles.cityText}>{city.city_name}</Text>
@@ -41,19 +45,30 @@ export default function CitySelection() {
         </Pressable>
       ))}
     </View>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
+  background:{
+    flex: 1,
+    backgroundColor: "#121212",
+    padding: 20,
+  },
+  header:{
+    color:'white',
+    fontSize:20
+  },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 2,
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#121212",
   },
   cityBox: {
     width: "90%",
-    padding: 15,
+    padding: 10,
     backgroundColor: "white",
     borderRadius: 10,
     marginVertical: 10,
