@@ -50,14 +50,14 @@ export default function Home({ navigation }) {
 
   {/* Third Row */}
   <View style={styles.buttonRow}>
-    <TouchableOpacity style={styles.circleb} onPress={() => alert('Investments')}>
+    <TouchableOpacity style={styles.circleb} onPress={() => router.replace('/(city-selection)/city-selection')}>
       <MaterialCommunityIcons name="finance" size={60} color="black" />
       <Text style={styles.coursetext}>Investments</Text>
     </TouchableOpacity>
 
-    <TouchableOpacity style={styles.circleb} onPress={() => alert('More')}>
+    <TouchableOpacity style={styles.circleb} onPress={() => router.replace('/(chatbot)/chatbot')}>
       <Icon name="bullseye" size={60} color="black" />
-      <Text style={styles.coursetext}>More</Text>
+      <Text style={styles.coursetext}>Chat</Text>
     </TouchableOpacity>
   </View>
 </ScrollView>
