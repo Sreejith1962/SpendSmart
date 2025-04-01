@@ -16,7 +16,7 @@ export default function Home({ navigation }) {
         {/* Chapter Button */}
         <View style={styles.roundbox1}>
           <Text style={{ fontSize: 20, color: 'red', paddingTop: 0 }}>Progress</Text>
-          <TouchableOpacity style={styles.chapterb} onPress={() => navigation.navigate('Materials')}>
+          <TouchableOpacity style={styles.chapterb} onPress={() => router.replace('/')}>
             <Text style={styles.buttonText}>Chapter</Text>
           </TouchableOpacity>
         </View>
