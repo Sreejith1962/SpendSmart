@@ -1,52 +1,9 @@
-// import React from 'react';
-// import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native';
-// import { Image } from 'react-native';
-// import sample from '../assets/data/sample.json'
-// import Stocklist from './Stocklist';
-// import { TouchableOpacity } from 'react-native';
-
-// export default function Stockpage({navigation}) {
-//   const stocks=Object.values(sample);
-// //   console.log(stocks)
-//   return (
-//     <>
-//     <SafeAreaView edges={["top"]} style={{flex: 0, backgroundColor: '#E9FF78',justifyContent: 'center'}}>
-//       <View style={{padding:20, paddingTop: 40}}>
-//       <Image source={require('../assets/images/stocksicon.png')} style={{width: 50, height: 50}}/>
-//       <Text style={{fontSize: 30, fontWeight: 'bold'}}>Stocks</Text>
-//       </View>
-//     </SafeAreaView>
-//     <SafeAreaView edges={["bottom"]} style={{flex: 1,backgroundColor: 'black'}}>
-//       <TouchableOpacity style={styles.container}>
-//         <FlatList style={styles.fl}
-//         data={stocks}
-//         renderItem={({item})=><Stocklist stock={item}/>}
-//         >
-//         </FlatList>
-//       </TouchableOpacity>
-//       {/* </Link> */}
-//     </SafeAreaView>
-//     </>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#000000'
-//   },
-//   fl: {
-//     padding: 10,
-//   },
-// });
-
-
-
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Image } from 'react-native';
 import Stocklist from './Stocklist';
 import { TouchableOpacity } from 'react-native';
+import stocksIcon from "@/assets/images/stocksicon.png";
 
 export default function Stockpage({ navigation }) {
   const [stocks, setStocks] = useState([]);
@@ -99,7 +56,7 @@ export default function Stockpage({ navigation }) {
     <>
       <SafeAreaView edges={["top"]} style={{ flex: 0, backgroundColor: '#E9FF78', justifyContent: 'center' }}>
         <View style={{ padding: 20, paddingTop: 40 }}>
-          <Image source={require('../assets/images/stocksicon.png')} style={{ width: 50, height: 50 }} />
+          <Image source={stocksIcon} style={{ width: 50, height: 50 }} />
           <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Stocks</Text>
         </View>
       </SafeAreaView>
