@@ -53,36 +53,40 @@ const JobSelectionScreen = () => {
     setJobs(randomJobs);
   };
 
-  // Handle job selection
   const selectJob = async (job) => {
     try {
       const userId = await AsyncStorage.getItem("user_id");
-
+  
       if (!userId) {
         Alert.alert("Error", "User ID not found");
         return;
       }
-
-      const response = await fetch(`${API_URL}/update-user-salary`, {
+  
+      const response = await fetch(`${API_URL}/update-user-job`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userId, salary: job.salary }),
+        body: JSON.stringify({ 
+          user_id: userId, 
+          salary: job.salary, 
+          rent: job.rent 
+        }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
         await AsyncStorage.setItem("salary", job.salary);
-        Alert.alert("Success", `You selected ${job.title} with salary ₹${job.salary}`);
-        router.push("/home"); // Navigate to home screen after selection
+        await AsyncStorage.setItem("rent", job.rent);
+        Alert.alert("Success", `You selected ${job.title} with salary ₹${job.salary} and rent ₹${job.rent}`);
+        router.push("/home");
       } else {
-        throw new Error(result.message || "Failed to update salary");
+        throw new Error(result.message || "Failed to update job info");
       }
     } catch (error) {
       Alert.alert("Error", error.message);
     }
   };
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select Your Job</Text>

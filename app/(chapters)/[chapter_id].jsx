@@ -3,11 +3,24 @@ import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from "react
 import { useRouter, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 import { API_URL } from "@/constants/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = API_URL; // Replace with your actual backend URL
-const USER_ID = 1; // Test user ID, replace with dynamic user input if needed
+const API_BASE_URL = API_URL; 
+
 
 export default function LessonsScreen() {
+  const [userId, setuserId] = useState("")
+  
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const Id = await AsyncStorage.getItem("user_id");
+      setuserId(Id)
+    };
+    loadProfile();
+  }, []);
+  const USER_ID = userId; 
+  console.log(USER_ID)
   const [lessons, setLessons] = useState([]);
   const [userProgress, setUserProgress] = useState(null);
   const router = useRouter();
@@ -16,7 +29,7 @@ export default function LessonsScreen() {
   useEffect(() => {
     fetchLessons();
     fetchUserProgress();
-  }, []);
+  }, [userId]);
 
   const fetchLessons = async () => {
     try {

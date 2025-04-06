@@ -37,7 +37,7 @@ export default function Login() {
   
         console.log("Storing user data...");
         await AsyncStorage.setItem("user_id", data.user_id.toString());
-        // await AsyncStorage.setItem("access_token", data.access_token);
+        await AsyncStorage.setItem("balance", data.account_balance);
         
         setUserId(data.user_id);
         fetchProfile(data.user_id);

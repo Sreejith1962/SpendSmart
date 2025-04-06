@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { API_URL } from "@/constants/api";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 const QuizScreen = () => {
   const { chapterId } = useLocalSearchParams();  // Fetch passed params
   const router = useRouter();
@@ -47,32 +48,92 @@ const QuizScreen = () => {
       return updatedAnswers;
     });
   };
-
-  const submitQuiz = () => {
+ 
+  
+  // Function to get user_id from AsyncStorage
+  const getUserIdFromStorage = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("user_id");
+      return userId;
+    } catch (error) {
+      console.error("Error getting user_id from storage:", error);
+      return null;
+    }
+  };
+  // const submitQuiz = () => {
+  //   let score = 0;
+  //   const totalQuestions = quiz.length;
+  
+  //   quiz.forEach((question) => {
+  //     const userAnswer = answers[question.question]; // Get the user's full answer (e.g., 'Groceries')
+  //     const correctAnswer = question.answer; // Correct letter (e.g., 'C')
+  
+  //     // Find the option letter corresponding to the user's answer
+  //     const userAnswerLetter = question.options.findIndex(option => option === userAnswer);
+      
+  //     // Check if the answer exists in the options and then compare the index with the correct answer letter
+  //     if (userAnswerLetter !== -1 && String.fromCharCode(65 + userAnswerLetter) === correctAnswer) {
+  //       score++;
+  //     }
+  
+  //     // Log for debugging
+  //     console.log(`User Answer: ${userAnswer}, Correct Answer: ${correctAnswer}, User Answer Letter: ${String.fromCharCode(65 + userAnswerLetter)}`);
+  //   });
+  
+  //   // Update the quiz score state
+  //   setQuizScore(score); // This will set the score in your state
+  //   console.log(`Quiz Score: ${score}/${totalQuestions}`); // Log final score
+  // };
+  
+  const submitQuiz = async () => {
     let score = 0;
     const totalQuestions = quiz.length;
   
     quiz.forEach((question) => {
-      const userAnswer = answers[question.question]; // Get the user's full answer (e.g., 'Groceries')
-      const correctAnswer = question.answer; // Correct letter (e.g., 'C')
+      const userAnswer = answers[question.question];
+      const correctAnswer = question.answer;
   
-      // Find the option letter corresponding to the user's answer
       const userAnswerLetter = question.options.findIndex(option => option === userAnswer);
-      
-      // Check if the answer exists in the options and then compare the index with the correct answer letter
-      if (userAnswerLetter !== -1 && String.fromCharCode(65 + userAnswerLetter) === correctAnswer) {
+  
+      if (
+        userAnswerLetter !== -1 &&
+        String.fromCharCode(65 + userAnswerLetter) === correctAnswer
+      ) {
         score++;
       }
-  
-      // Log for debugging
-      console.log(`User Answer: ${userAnswer}, Correct Answer: ${correctAnswer}, User Answer Letter: ${String.fromCharCode(65 + userAnswerLetter)}`);
     });
   
-    // Update the quiz score state
-    setQuizScore(score); // This will set the score in your state
-    console.log(`Quiz Score: ${score}/${totalQuestions}`); // Log final score
-  };
+    setQuizScore(score);
+    console.log(`Quiz Score: ${score}/${totalQuestions}`);
   
+    if (score >= 3) {
+      setIsSubmitting(true);
+  
+      const userId = await getUserIdFromStorage();
+      if (!userId) {
+        Alert.alert("Error", "User ID not found. Please log in again.");
+        setIsSubmitting(false);
+        return;
+      }
+  
+      try {
+        const response = await axios.post(
+          `${API_URL}/skip-to-next-chapter/${userId}`
+        );
+  
+        console.log("Chapter skipped:", response.data);
+        Alert.alert("Success", "You've advanced to the next chapter!");
+        router.back(); // or navigate to dashboard/next lesson
+      } catch (error) {
+        console.error("Error skipping chapter:", error);
+        Alert.alert("Error", "Failed to skip to next chapter.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      Alert.alert("Quiz Failed", "Score less than 3. Please try again.");
+    }
+  };
   
   
   if (loading) return <ActivityIndicator size="large" color="blue" />;

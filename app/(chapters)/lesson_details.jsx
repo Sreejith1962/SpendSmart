@@ -3,9 +3,10 @@ import { View, Text, Button, Alert, StyleSheet, ScrollView } from "react-native"
 import { useRouter, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 import { API_URL } from "@/constants/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = API_URL; // Backend URL
-const USER_ID = 1; // Replace with actual user ID
+const API_BASE_URL = API_URL; 
+
 
 export default function LessonDetails() {
   const { lesson_id, chapter_id } = useLocalSearchParams();
@@ -13,7 +14,18 @@ export default function LessonDetails() {
   const [hasNext, setHasNext] = useState(false);
   const [userProgress, setUserProgress] = useState(null);
   const router = useRouter();
+  const [userId, setuserId] = useState("")
+  
 
+  useEffect(() => {
+    const loadProfile = async () => {
+      const Id = await AsyncStorage.getItem("user_id");
+      setuserId(Id)
+    };
+    loadProfile();
+  }, []);
+  const USER_ID = userId; 
+  console.log(USER_ID)
   useEffect(() => {
     fetchLesson();
     fetchUserProgress();

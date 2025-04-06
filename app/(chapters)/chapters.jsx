@@ -1,21 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, Button } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import { API_URL } from "@/constants/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = API_URL; // Replace with your actual backend URL
-const USER_ID = 1; // Test user ID, replace with dynamic user input if needed
+const API_BASE_URL = API_URL; 
 
 export default function ChaptersScreen() {
+  const [userId, setUserId] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [userProgress, setUserProgress] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    fetchChapters();
-    fetchUserProgress();
+    const loadProfile = async () => {
+      try {
+        const Id = await AsyncStorage.getItem("user_id");
+        setUserId(Id);
+      } catch (e) {
+        console.error("Failed to load user ID", e);
+      }
+    };
+
+    loadProfile();
   }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchChapters();
+      fetchUserProgress();
+    }
+  }, [userId]); // Run once userId is available
 
   const fetchChapters = async () => {
     try {
@@ -28,7 +44,7 @@ export default function ChaptersScreen() {
 
   const fetchUserProgress = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user/progress/${USER_ID}`);
+      const response = await axios.get(`${API_BASE_URL}/user/progress/${userId}`);
       setUserProgress(response.data);
     } catch (error) {
       Alert.alert("Error", "Failed to fetch user progress");
@@ -47,9 +63,15 @@ export default function ChaptersScreen() {
         keyExtractor={(item) => item.chapter_id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => canAccessChapter(item.chapter_id) && router.replace(`/(chapters)/${item.chapter_id}`)}
+            onPress={() =>
+              canAccessChapter(item.chapter_id) &&
+              router.replace(`/(chapters)/${item.chapter_id}`)
+            }
             disabled={!canAccessChapter(item.chapter_id)}
-            style={[styles.chapterCard, !canAccessChapter(item.chapter_id) && styles.disabled]}
+            style={[
+              styles.chapterCard,
+              !canAccessChapter(item.chapter_id) && styles.disabled,
+            ]}
           >
             <Text style={styles.chapterText}>{item.title}</Text>
           </TouchableOpacity>
