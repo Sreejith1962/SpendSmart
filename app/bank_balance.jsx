@@ -12,8 +12,8 @@ export default function BankBalance({ balance }) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 0,
-    right: 0,
+    top: 40,
+    right: 20,
     backgroundColor: "#f0f0f0",
     paddingHorizontal: 10,
     paddingVertical: 6,

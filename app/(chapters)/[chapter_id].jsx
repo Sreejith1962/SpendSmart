@@ -42,6 +42,7 @@ export default function LessonsScreen() {
 
   const fetchUserProgress = async () => {
     try {
+      if(!userId) return;
       const response = await axios.get(`${API_BASE_URL}/user/progress/${USER_ID}`);
       setUserProgress(response.data);
     } catch (error) {

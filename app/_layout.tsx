@@ -32,7 +32,9 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+       
       <View style={{ flex: 1 }}>
+        
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
         </Stack>

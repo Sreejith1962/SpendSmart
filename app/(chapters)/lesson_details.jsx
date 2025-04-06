@@ -5,31 +5,32 @@ import axios from "axios";
 import { API_URL } from "@/constants/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE_URL = API_URL; 
-
+const API_BASE_URL = API_URL;
 
 export default function LessonDetails() {
-  const { lesson_id, chapter_id } = useLocalSearchParams();
+  const [userId, setUserId] = useState("");
   const [lesson, setLesson] = useState(null);
   const [hasNext, setHasNext] = useState(false);
   const [userProgress, setUserProgress] = useState(null);
+
   const router = useRouter();
-  const [userId, setuserId] = useState("")
-  
+  const { lesson_id, chapter_id } = useLocalSearchParams();
 
   useEffect(() => {
-    const loadProfile = async () => {
-      const Id = await AsyncStorage.getItem("user_id");
-      setuserId(Id)
+    const loadUserId = async () => {
+      const id = await AsyncStorage.getItem("user_id");
+      setUserId(id);
     };
-    loadProfile();
+    loadUserId();
   }, []);
-  const USER_ID = userId; 
-  console.log(USER_ID)
+
   useEffect(() => {
-    fetchLesson();
-    fetchUserProgress();
-  }, [lesson_id]);
+    if (userId) {
+      fetchLesson();
+      fetchUserProgress();
+    }
+  }, [userId]);
+  
 
   const fetchLesson = async () => {
     try {
@@ -37,84 +38,70 @@ export default function LessonDetails() {
       setLesson(response.data.lesson);
       setHasNext(response.data.has_next);
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch lesson details");
-      console.error("Lesson fetch error:", error);
+      Alert.alert("Error", "Failed to fetch lesson");
     }
   };
 
   const fetchUserProgress = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user/progress/${USER_ID}`);
+      if(!userId) return;
+      const response = await axios.get(`${API_BASE_URL}/user/progress/${userId}`);
       setUserProgress(response.data);
-      console.log("Fetched user progress:", response.data);
     } catch (error) {
-      console.error("Failed to fetch user progress:", error);
+      Alert.alert("Error", "Failed to fetch progress");
     }
   };
-  const handleNext = () => {
-    if (!hasNext) {
-      const currentChapterId = Number(chapter_id);
 
-      router.push(`/quiz?chapterId=${currentChapterId}&userId=${USER_ID}`);
-    } else {
-      // Normal lesson navigation
-      updateProgress();
-    }
-  };
   const updateProgress = async () => {
-    if (!userProgress) return;
-  
-    const userCurrentLessonId = Number(userProgress.current_lesson_id);
-    const currentLessonId = Number(lesson_id);
-    const currentChapterId = Number(chapter_id);
-  
-    // Should update progress if user is on or ahead of their tracked progress
-    const shouldUpdateProgress =
-      userProgress.current_chapter_id === currentChapterId &&
-      currentLessonId >= userCurrentLessonId;
-  
-    console.log("Checking progress update:", { 
-      userProgress, 
-      userCurrentLessonId, 
-      currentLessonId, 
-      shouldUpdateProgress 
-    });
-  
-    if (shouldUpdateProgress) {
-      try {
-        console.log("Updating progress...");
-        await axios.post(`${API_BASE_URL}/update-progress/${USER_ID}`, {
-          user_id: USER_ID,
-          lesson_id: currentLessonId,
-          chapter_id: currentChapterId,
-        });
-  
-        console.log("Progress updated!");
-        await fetchUserProgress(); // Ensure UI syncs with backend
-  
-        // Navigate to next lesson
-        router.replace(`/(chapters)/lesson_details?lesson_id=${currentLessonId + 1}&chapter_id=${currentChapterId}`);
-      } catch (error) {
-        Alert.alert("Error", "Failed to update progress");
-        console.error("Progress update error:", error);
-      }
-    } else {
-      console.log("Navigating without updating progress...");
-      router.replace(`/(chapters)/lesson_details?lesson_id=${currentLessonId + 1}&chapter_id=${currentChapterId}`);
+    try {
+      await axios.post(
+        `${API_BASE_URL}/update-progress/${userId}`,
+        {
+          user_id: userId,
+          lesson_id: Number(lesson_id),
+          chapter_id: Number(chapter_id),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      Alert.alert("Error", "Failed to update progress");
     }
   };
-  
-  
 
-  if (!lesson) return <Text>Loading...</Text>;
+  const handleNext = async () => {
+    const nextLessonId = Number(lesson_id) + 1;
+    const chapterIdNum = Number(chapter_id);
+
+    const currentLessonProgress = Number(userProgress?.current_lesson_id || 0);
+    const currentChapterProgress = Number(userProgress?.current_chapter_id || 0);
+
+    if (
+      currentChapterProgress === chapterIdNum &&
+      Number(lesson_id) >= currentLessonProgress
+    ) {
+      await updateProgress();
+    }
+
+    if (!hasNext) {
+      router.replace(`/quiz?chapterId=${chapterIdNum}&userId=${userId}`);
+    } else {
+      router.replace(
+        `/(chapters)/lesson_details?lesson_id=${nextLessonId}&chapter_id=${chapterIdNum}`
+      );
+    }
+  };
+
+  if (!lesson) return <Text style={styles.loadingText}>Loading...</Text>;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-   
       <Text style={styles.title}>{lesson.title}</Text>
       <Text style={styles.content}>{lesson.content}</Text>
-
-      <Button title="Next Lesson" onPress={handleNext} />
+      <Button title={hasNext ? "Next Lesson" : "Start Quiz"} onPress={handleNext} />
     </ScrollView>
   );
 }
@@ -139,5 +126,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     marginBottom: 20,
+  },
+  loadingText: {
+    flex: 1,
+    textAlign: "center",
+    marginTop: 50,
+    color: "#fff",
   },
 });
