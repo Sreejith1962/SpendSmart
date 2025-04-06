@@ -2,7 +2,7 @@ import { API_URL } from "@/constants/api";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, View, Pressable, Platform } from "react-native";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 
 const App = () => {
   const router = useRouter();

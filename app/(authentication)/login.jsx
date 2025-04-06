@@ -79,7 +79,7 @@ export default function Login() {
         <Text style={styles.buttonText}>{isLoading ? "Logging in..." : "Login"}</Text>
       </Pressable>
       <Text style={{color:'white',fontSize:19,paddingTop:14}}>Not a registered user? 
-        <Link replace href='/(authentication)/register' asChild>
+        <Link  href='/(authentication)/register' asChild>
         <Pressable >
           <Text style={{color:'blue',fontSize:17,}}> Register Now</Text>
 
